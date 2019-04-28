@@ -1,4 +1,4 @@
-node['postgresql']['psql'] = '/usr/bin/psql'
-node['postgresql']['datadir'] = ''
-node['postgresql']['confdir'] = ''
-node['postgresql']['service'] = ''
+default['postgresql']['psql'] = '/usr/bin/psql'
+default['postgresql']['datadir'] = ''
+default['postgresql']['confdir'] = ''
+default['postgresql']['service'] = ''
