@@ -36,6 +36,8 @@ property :port,     Integer, default: 5432
 action :create do
   Chef::Log.warn('You cannot use "attributes" property with create action.') unless new_resource.attributes.empty?
 
+  node.run_state['postgresql'] ||= {}
+
   execute "create postgresql user #{new_resource.create_user}" do # ~FC009
     user 'postgres'
     command create_user_sql(new_resource)
@@ -45,6 +47,7 @@ action :create do
 end
 
 action :update do
+  node.run_state['postgresql'] ||= {}
   if new_resource.attributes.empty?
     execute "update postgresql user #{new_resource.create_user}" do
       user 'postgres'
@@ -73,6 +76,7 @@ action :update do
 end
 
 action :drop do
+  node.run_state['postgresql'] ||= {}
   execute "drop postgresql user #{new_resource.create_user}" do
     user 'postgres'
     command drop_user_sql(new_resource)
