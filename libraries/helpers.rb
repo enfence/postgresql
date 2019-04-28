@@ -22,7 +22,7 @@ module PostgresqlCookbook
     require 'securerandom'
 
     def psql_command_string(new_resource, query, grep_for: nil, value_only: false)
-      cmd = "/usr/bin/psql -c \"#{query}\""
+      cmd = "#{node['postgresql']['psql']} -c \"#{query}\""
       cmd << " -d #{new_resource.database}" if new_resource.database
       cmd << " -U #{new_resource.user}"     if new_resource.user
       cmd << " --host #{new_resource.host}" if new_resource.host
@@ -138,6 +138,7 @@ module PostgresqlCookbook
     end
 
     def data_dir(version = node.run_state['postgresql']['version'])
+      return node['postgresql']['datadir'] unless node['postgresql']['datadir'].empty?
       case node['platform_family']
       when 'rhel', 'fedora'
         "/var/lib/pgsql/#{version}/data"
@@ -153,6 +154,7 @@ module PostgresqlCookbook
     end
 
     def conf_dir(version = node.run_state['postgresql']['version'])
+      return node['postgresql']['confdir'] unless node['postgresql']['confdir'].empty?
       case node['platform_family']
       when 'rhel', 'fedora'
         "/var/lib/pgsql/#{version}/data"
@@ -169,6 +171,7 @@ module PostgresqlCookbook
 
     # determine the platform specific service name
     def platform_service_name(version = node.run_state['postgresql']['version'])
+      return node['postgresql']['service'] unless node['postgresql']['service'].empty?
       case node['platform_family']
       when 'rhel', 'fedora'
         "postgresql-#{version}"
